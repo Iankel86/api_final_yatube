@@ -5,6 +5,7 @@ User = get_user_model()
 
 
 class Group(models.Model):
+    """Модель для создания групп."""
     title = models.CharField(max_length=200)
     slug = models.SlugField(unique=True)
     description = models.TextField()
@@ -14,6 +15,7 @@ class Group(models.Model):
 
 
 class Post(models.Model):
+    """Модель для создания постов."""
     text = models.TextField()
     pub_date = models.DateTimeField(
         'Дата публикации', auto_now_add=True
@@ -29,11 +31,15 @@ class Post(models.Model):
         related_name="posts", blank=True, null=True
     )
 
-    def __str__(self):
-        return self.text
+    class Meta:
+        ordering = ('pub_date',)
+
+    def __str__(self) -> str:
+        return self.text[25]
 
 
 class Comment(models.Model):
+    """Модель для комментирования постов."""
     author = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='comments'
     )
@@ -47,6 +53,7 @@ class Comment(models.Model):
 
 
 class Follow(models.Model):
+    """Модель для создания подписок на авторов."""
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='follower',
         blank=True, null=True,
